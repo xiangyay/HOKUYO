@@ -20,6 +20,7 @@
 #define snprintf _snprintf
 #endif
 
+int test_msg__g = 1;
 
 enum {
     URG_FALSE = 0,
@@ -66,7 +67,7 @@ static int set_errno_and_return(urg_t *urg, int urg_errno)
 }
 
 
-// Returns the number of lines received
+/* 返回接收到的行数 */
 static int scip_response(urg_t *urg, const char* command,
                          const int expected_ret[], int timeout,
                          char *receive_buffer, int receive_buffer_max_size)
@@ -223,7 +224,9 @@ static int change_sensor_baudrate(urg_t *urg,
 }
 
 
-// Sets the baudrate and connects to the sensor
+/*
+ * 设定波特率 连接到sensor
+ */
 static int connect_urg_device(urg_t *urg, long baudrate)
 {
     long try_baudrate[] = { 19200, 57600, 115200, 250000, 500000, 750000 };
@@ -308,7 +311,9 @@ static int connect_urg_device(urg_t *urg, long baudrate)
 }
 
 
-// Stores the PP command response into urg_t
+/*
+ * 将PP指令的返回数据储存到urg_t结构体
+ */
 static int receive_parameter(urg_t *urg)
 {
     enum { RECEIVE_BUFFER_SIZE = BUFFER_SIZE * 9, };
@@ -694,7 +699,9 @@ static int receive_data(urg_t *urg, long data[], unsigned short intensity[],
     return ret;
 }
 
-
+/*
+ * 打开和雷达的通信接口
+ */
 int urg_open(urg_t *urg, urg_connection_type_t connection_type,
              const char *device_or_address, long baudrate_or_port)
 {
@@ -708,10 +715,10 @@ int urg_open(urg_t *urg, urg_connection_type_t connection_type,
     urg->scanning_skip_scan = 0;
     urg->error_handler = NULL;
 
-    // Connects to the device
+    /* 连接到设备 */
     ret = connection_open(&urg->connection, connection_type,
                           device_or_address, baudrate_or_port);
-
+	/* 端口打开失败 */
     if (ret < 0) {
         switch (connection_type) {
         case URG_SERIAL:
@@ -729,9 +736,9 @@ int urg_open(urg_t *urg, urg_connection_type_t connection_type,
         return urg->last_errno;
     }
 
-    // Make adjustments so to connect with URG using the specified baudrate
+    // 调整到特定的波特率来连接URG sensor
     if (connection_type == URG_ETHERNET) {
-        // In case of Ethernet, sets a fake baudrate
+        // 在以太网中设置一个假的波特率
         baudrate = 115200;
     }
 
@@ -741,16 +748,17 @@ int urg_open(urg_t *urg, urg_connection_type_t connection_type,
     }
     urg->is_sending = URG_FALSE;
 
-    // Initializes variables
+    /* 初始化变量 */
     urg->last_errno = URG_NO_ERROR;
     urg->range_data_byte = URG_COMMUNICATION_3_BYTE;
     urg->specified_scan_times = 0;
     urg->scanning_remain_times = 0;
     urg->is_laser_on = URG_FALSE;
 
-    // Gets the sensor parameters
+    /* 获取sensor参数 */
     ret = receive_parameter(urg);
     if (ret == URG_NO_ERROR) {
+		/* sensor标记为激活状态 */
         urg->is_active = URG_TRUE;
     }
     return ret;

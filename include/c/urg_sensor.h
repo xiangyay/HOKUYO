@@ -18,6 +18,9 @@ extern "C" {
 
 #include "urg_connection.h"
 
+
+extern int test_msg__g;
+#define DEBUG if(test_msg__g)printf
     /*!
       \brief Measurement types
     */
