@@ -33,4 +33,4 @@ $(URG_CPP_LIB_STATIC) : $(OBJ_C) $(OBJ_CPP)
 $(URG_CPP_LIB_SHARED) : $(OBJ_C) $(OBJ_CPP)
 	$(CXX) $(CXXFLAGS) -shared -o $@ $(OBJ_C) $(OBJ_CPP) $(LDLIBS)
 
-urg_serial_utils.o : urg_serial_utils_windows.c urg_serial_utils_linux.c
+urg_serial_utils.o : urg_serial_utils_linux.c
