@@ -1,5 +1,5 @@
 /*!
-  \brief 连接到URG sensor
+  \brief 打开sensor对应的接口 连接到URG sensor
   \author Satofumi KAMIMURA
 
   $Id: open_urg_sensor.c,v c5747add6615 2015/05/07 03:18:34 alexandr $
